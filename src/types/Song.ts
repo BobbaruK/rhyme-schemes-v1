@@ -4,6 +4,7 @@ export interface ISong {
   name: string;
   artistId: string;
   albumId: string;
+  duration: string;
   link: string;
-  rhymes: any;
+  rhymes?: any;
 }
