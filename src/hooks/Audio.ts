@@ -29,6 +29,7 @@ const useAudio = () => {
     audioPlayer.current.onplay = () => {
       setIsPlaying(true);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeJump]);
 
   useEffect(() => {

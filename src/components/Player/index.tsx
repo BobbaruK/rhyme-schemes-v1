@@ -17,7 +17,7 @@ import React from "react";
 
 interface Props {
   album: IAlbum;
-  artists: EntryCollection<EntrySkeletonType<IArtist>, undefined, string>;
+  artists: Entry<EntrySkeletonType<IArtist>, undefined, string>[];
   band: IArtist;
   artwork: IAsset | undefined;
   songs: Entry<EntrySkeletonType<ISong>, undefined, string>[];
@@ -50,7 +50,7 @@ const Player = ({ album, artists, band, artwork, songs }: Props) => {
     const output: string[] = [];
 
     for (let i = 0; i < writers.length; i++) {
-      const artist = artists.items.find(
+      const artist = artists.find(
         (artist) => artist.fields.id === writers[i]
       );
 

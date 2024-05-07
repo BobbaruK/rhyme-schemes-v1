@@ -20,8 +20,6 @@ interface Props {
 }
 
 const Album = async ({ params: { albumId } }: Props) => {
-  console.log("dsajdksajdklsa");
-
   const client = createClient({
     space: process.env.CONTENTFUL_SPACE_ID as unknown as string,
     accessToken: process.env.CONTENTFUL_ACCESS_TOKEN as unknown as string,

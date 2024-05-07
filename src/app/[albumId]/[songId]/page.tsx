@@ -61,7 +61,7 @@ const Song = async ({ params: { songId, albumId } }: Props) => {
     <div className="container py-8">
       <Player
         album={albumFields}
-        artists={artistResponse}
+        artists={artistResponse.items}
         band={artistFields}
         artwork={albumAsset}
         songs={songs}
