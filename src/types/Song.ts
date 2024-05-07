@@ -6,5 +6,6 @@ export interface ISong {
   albumId: string;
   duration: string;
   link: string;
+  writers: string[];
   rhymes?: any;
 }
