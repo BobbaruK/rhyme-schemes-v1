@@ -1,7 +1,9 @@
 export interface ISong {
-  songName: string;
-  songAlbumId: string;
+  id: string;
   trackNo: number;
-  songLink: string;
-  songRhymes: any;
+  name: string;
+  artistId: string;
+  albumId: string;
+  link: string;
+  rhymes: any;
 }

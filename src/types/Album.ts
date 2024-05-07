@@ -1,9 +1,9 @@
 export interface IAlbum {
-  albumId: string;
-  albumSlug: string;
-  albumName: string;
-  albumYear: number;
-  albumArtwork: {
+  id: string;
+  slug: string;
+  name: string;
+  year: number;
+  artwork: {
     sys: {
       type: string;
       linkType: string;
