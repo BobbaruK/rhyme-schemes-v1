@@ -7,5 +7,6 @@ export interface ISong {
   duration: string;
   link: string;
   writers: string[];
+  instrumental: string[];
   rhymes?: any;
 }

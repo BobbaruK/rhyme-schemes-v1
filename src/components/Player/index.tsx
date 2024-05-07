@@ -50,9 +50,7 @@ const Player = ({ album, artists, band, artwork, songs }: Props) => {
     const output: string[] = [];
 
     for (let i = 0; i < writers.length; i++) {
-      const artist = artists.find(
-        (artist) => artist.fields.id === writers[i]
-      );
+      const artist = artists.find((artist) => artist.fields.id === writers[i]);
 
       output.push(artist?.fields.name as unknown as string);
     }
@@ -61,8 +59,22 @@ const Player = ({ album, artists, band, artwork, songs }: Props) => {
   };
   const writers = getWriter();
 
-  // console.log(actualSong?.fields.writers);
-  // console.log(artists);
+  const getProducer = () => {
+    const actualSongProducerId = actualSong?.fields
+      .instrumental as unknown as string;
+
+    if (actualSongProducerId === "other") return "De pe net";
+
+    const artist = artists.find(
+      (artist) => artist.fields.id === actualSongProducerId
+    );
+    const artistName = artist?.fields.name as unknown as string;
+
+    return artistName;
+  };
+  const producer = getProducer();
+
+  console.log(producer);
 
   return (
     <>
@@ -143,7 +155,7 @@ const Player = ({ album, artists, band, artwork, songs }: Props) => {
                   </React.Fragment>
                 ))}
               </p>
-              <p>Instrumental: cutare</p>
+              <p>Instrumental: {producer}</p>
             </TabsContent>
             <TabsContent value="lirica">lirica here</TabsContent>
           </div>
