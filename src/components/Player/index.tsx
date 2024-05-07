@@ -6,14 +6,14 @@ import { IAlbum } from "@/types/Album";
 import { IArtist } from "@/types/Artist";
 import { IAsset } from "@/types/Asset";
 import { ISong } from "@/types/Song";
-import { Entry, EntryCollection, EntrySkeletonType } from "contentful";
+import { Entry, EntrySkeletonType } from "contentful";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { FaPause, FaPlay } from "react-icons/fa";
 import { Button } from "../ui/button";
+import DetailsTab from "./DetailsTab";
 import PlaylistTab from "./PlaylistTab";
-import React from "react";
 
 interface Props {
   album: IAlbum;
@@ -41,40 +41,6 @@ const Player = ({ album, artists, band, artwork, songs }: Props) => {
   } = useAudio();
 
   const actualSong = songs.find((song) => song.fields.id === songId);
-
-  const getWriter = () => {
-    const writers = [
-      ...(actualSong ? actualSong.fields.writers : []),
-    ] as string[];
-
-    const output: string[] = [];
-
-    for (let i = 0; i < writers.length; i++) {
-      const artist = artists.find((artist) => artist.fields.id === writers[i]);
-
-      output.push(artist?.fields.name as unknown as string);
-    }
-
-    return output;
-  };
-  const writers = getWriter();
-
-  const getProducer = () => {
-    const actualSongProducerId = actualSong?.fields
-      .instrumental as unknown as string;
-
-    if (actualSongProducerId === "other") return "De pe net";
-
-    const artist = artists.find(
-      (artist) => artist.fields.id === actualSongProducerId
-    );
-    const artistName = artist?.fields.name as unknown as string;
-
-    return artistName;
-  };
-  const producer = getProducer();
-
-  console.log(producer);
 
   return (
     <>
@@ -145,17 +111,11 @@ const Player = ({ album, artists, band, artwork, songs }: Props) => {
               <PlaylistTab songs={songs} />
             </TabsContent>
             <TabsContent value="detalii">
-              <p>
-                Text:{" "}
-                {writers.map((writer, index) => (
-                  <React.Fragment
-                    key={writer.replaceAll(" ", "-") + "-" + index}>
-                    <span>{writer}</span>
-                    {writers.length !== index + 1 && <> / </>}
-                  </React.Fragment>
-                ))}
-              </p>
-              <p>Instrumental: {producer}</p>
+              <DetailsTab
+                actualSong={actualSong}
+                artists={artists}
+                album={album}
+              />
             </TabsContent>
             <TabsContent value="lirica">lirica here</TabsContent>
           </div>
