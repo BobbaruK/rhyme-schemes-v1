@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import { FaCog } from "react-icons/fa";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,8 +20,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <header>
-          <div className="container py-4">
+          <div className="container flex items-center gap-4 py-4">
             <Link href={"/"}>Home</Link>
+            <Link href={"/settings"}>
+              <FaCog />
+            </Link>
           </div>
         </header>
         {children}
