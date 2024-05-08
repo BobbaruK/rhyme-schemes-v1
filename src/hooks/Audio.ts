@@ -1,11 +1,17 @@
-import { useSearchParams } from "next/navigation";
+import { zodSettingsFormSchema } from "@/lib/utils";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { z } from "zod";
 
 interface Settings {
   whenFinishedTo?: string;
 }
 
+const formSchema = zodSettingsFormSchema();
+
 const useAudio = (settings?: Settings) => {
+  const router = useRouter();
+
   const searchParams = useSearchParams();
   const timeJump = searchParams.get("time");
 
@@ -26,13 +32,27 @@ const useAudio = (settings?: Settings) => {
       timeTravel(0);
     }
 
-    play();
+    if (typeof window !== "undefined" && window.localStorage) {
+      const localSt = window.localStorage.getItem(
+        "scsseco-s-rhyme-schemes-settings",
+      );
 
-    if (audioPlayer.current === null) return;
+      if (localSt) {
+        const storage = JSON.parse(localSt) as z.infer<typeof formSchema>;
+        // console.log(storage);
 
-    audioPlayer.current.onplay = () => {
-      setIsPlaying(true);
-    };
+        if (storage.autoplay === true) {
+          play();
+
+          if (audioPlayer.current === null) return;
+
+          audioPlayer.current.onplay = () => {
+            setIsPlaying(true);
+          };
+        }
+      }
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeJump]);
 
@@ -111,11 +131,19 @@ const useAudio = (settings?: Settings) => {
   };
 
   useEffect(() => {
-    console.log(currentTime, duration);
-    if (settings && settings.whenFinishedTo) {
-      if (currentTime === duration && duration !== 0) {
+    // console.log(currentTime, duration);
+
+    const isEnd = currentTime === duration && duration !== 0;
+
+    if (settings && isEnd) {
+      if (settings.whenFinishedTo === undefined) {
         console.log("done");
+        setIsPlaying(false);
+
+        return;
       }
+
+      router.push(settings.whenFinishedTo);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

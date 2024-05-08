@@ -16,21 +16,12 @@ import { Checkbox } from "../ui/checkbox";
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { useToast } from "@/components/ui/use-toast";
+import { defaultSettings, zodSettingsFormSchema } from "@/lib/utils";
 
-const formSchema = z
-  .object({
-    autoplay: z.boolean(),
-    repeat: z.boolean(),
-  })
-  .partial();
+const formSchema = zodSettingsFormSchema();
 
 export function SettingsForm() {
   const { toast } = useToast();
-
-  const defaultSettings: z.infer<typeof formSchema> = {
-    autoplay: false,
-    repeat: false,
-  };
 
   const getLocalStorage = (): z.infer<typeof formSchema> => {
     const localSt = window.localStorage.getItem(

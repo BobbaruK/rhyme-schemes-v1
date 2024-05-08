@@ -15,6 +15,11 @@ import { TbPlayerTrackNext, TbPlayerTrackPrev } from "react-icons/tb";
 import { Button } from "../ui/button";
 import DetailsTab from "./DetailsTab";
 import PlaylistTab from "./PlaylistTab";
+import { useEffect, useState } from "react";
+import { z } from "zod";
+import { zodSettingsFormSchema } from "@/lib/utils";
+
+const formSchema = zodSettingsFormSchema();
 
 interface Props {
   album: IAlbum;
@@ -51,8 +56,50 @@ const Player = ({ album, artists, band, artwork, songs }: Props) => {
 
     return `/${nextAlbumId}/${nextSongId}`;
   };
-  const nextSong = getNextSongLink();
-  const prevSong = getNextSongLink("prev");
+
+  const [nextSongLink, setNextSongLink] = useState<string | undefined>(
+    getNextSongLink(),
+  );
+  const [prevSongLink, setPrevSongLink] = useState<string | undefined>(
+    getNextSongLink("prev"),
+  );
+
+  useEffect(() => {
+    const localSt = window.localStorage.getItem(
+      "scsseco-s-rhyme-schemes-settings",
+    );
+
+    if (localSt) {
+      const storage = JSON.parse(localSt) as z.infer<typeof formSchema>;
+
+      if (storage.repeat && nextSongLink === undefined) {
+        const firstSongAlbumId = songs[0].fields.albumId as unknown as string;
+        const firstSongId = songs[0].fields.id as unknown as string;
+
+        setNextSongLink(
+          (nextSong) => (nextSong = `/${firstSongAlbumId}/${firstSongId}`),
+        );
+
+        return;
+      } else if (storage.repeat && prevSongLink === undefined) {
+        const lastSongIndex = songs.length - 1;
+        const lastSongAlbumId = songs[lastSongIndex].fields
+          .albumId as unknown as string;
+        const lastSongId = songs[lastSongIndex].fields.id as unknown as string;
+
+        setPrevSongLink(
+          (prevSong) => (prevSong = `/${lastSongAlbumId}/${lastSongId}`),
+        );
+
+        return;
+      }
+    }
+
+    setNextSongLink((nextSong) => (nextSong = getNextSongLink(undefined)));
+    setPrevSongLink((prevSong) => (prevSong = getNextSongLink("prev")));
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const {
     audioPlayer,
@@ -64,10 +111,8 @@ const Player = ({ album, artists, band, artwork, songs }: Props) => {
     progressBar,
     togglePlayPause,
   } = useAudio({
-    whenFinishedTo: getNextSongLink(),
+    whenFinishedTo: nextSongLink,
   });
-
-  // console.log(getNextSongLink("prev"), actualSongTrackNo, getNextSongLink());
 
   return (
     <>
@@ -98,8 +143,8 @@ const Player = ({ album, artists, band, artwork, songs }: Props) => {
               <div className="my-auto flex items-center gap-2">
                 <Button
                   variant={"default"}
-                  onClick={() => router.push(prevSong ? prevSong : "")}
-                  disabled={!prevSong}
+                  onClick={() => router.push(prevSongLink ? prevSongLink : "")}
+                  disabled={!prevSongLink}
                   className="h-10 w-10 rounded-full p-1"
                 >
                   <TbPlayerTrackPrev size={15} />
@@ -116,8 +161,8 @@ const Player = ({ album, artists, band, artwork, songs }: Props) => {
 
                 <Button
                   variant={"default"}
-                  onClick={() => router.push(nextSong ? nextSong : "")}
-                  disabled={!nextSong}
+                  onClick={() => router.push(nextSongLink ? nextSongLink : "")}
+                  disabled={!nextSongLink}
                   className="h-10 w-10 rounded-full p-1"
                 >
                   <TbPlayerTrackNext size={15} />
