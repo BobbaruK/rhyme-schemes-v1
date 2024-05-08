@@ -32,7 +32,7 @@ const Album = async ({ params: { albumId } }: Props) => {
   >({ content_type: "album" });
 
   const album = albumsResponse.items.find(
-    (album) => album.fields.id === albumId
+    (album) => album.fields.id === albumId,
   );
 
   // Songs
@@ -42,7 +42,7 @@ const Album = async ({ params: { albumId } }: Props) => {
   >({ content_type: "song" });
 
   const songs = songsResponse.items.filter(
-    (song) => song.fields.albumId === albumId
+    (song) => song.fields.albumId === albumId,
   );
 
   // Artist
@@ -61,7 +61,7 @@ const Album = async ({ params: { albumId } }: Props) => {
   // console.log("s", uno);
 
   return (
-    <div className="container py-8 flex flex-col gap-4">
+    <div className="container flex flex-col gap-4 py-8">
       {/* <h1 className="font-bold text-xl sm:text-2xl">{artist?.fields.name}</h1> */}
       <h2 className="text-lg sm:text-xl">
         {album?.fields.name} <small>({album?.fields.year})</small>
@@ -86,8 +86,9 @@ const Album = async ({ params: { albumId } }: Props) => {
                     className={cn(
                       `${buttonVariants({
                         variant: "secondary",
-                      })} rounded-full text-xl w-10 h-10 p-0`
-                    )}>
+                      })} h-10 w-10 rounded-full p-0 text-xl`,
+                    )}
+                  >
                     <PiSpeakerNoneFill className="relative -right-[2px]" />
                   </Link>
                 </p>

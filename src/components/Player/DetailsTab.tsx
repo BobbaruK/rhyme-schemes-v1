@@ -35,7 +35,7 @@ const DetailsTab = ({ actualSong, album, artists }: Props) => {
     if (actualSongProducerId === "other") return "De pe net";
 
     const artist = artists.find(
-      (artist) => artist.fields.id === actualSongProducerId
+      (artist) => artist.fields.id === actualSongProducerId,
     );
     const artistName = artist?.fields.name as unknown as string;
 

@@ -35,13 +35,13 @@ export default async function Home() {
 
   return (
     <>
-      <div className="container py-8 flex gap-4 flex-col">
+      <div className="container flex flex-col gap-4 py-8">
         {albums.items.map((album) => {
           const actualAlbum = album.fields as unknown as IAlbum;
           const albumAsset = albums.includes?.Asset as unknown as IAsset[];
 
           const albumCover = albumAsset.find(
-            (asset) => asset.sys.id === actualAlbum.artwork.sys.id
+            (asset) => asset.sys.id === actualAlbum.artwork.sys.id,
           );
 
           const firstTrackId = getFirstTrackId(actualAlbum.id);
@@ -49,14 +49,15 @@ export default async function Home() {
           return (
             <Card
               key={actualAlbum.slug}
-              className="flex justify-start items-center overflow-hidden flex-col text-center sm:flex-row sm:text-start">
+              className="flex flex-col items-center justify-start overflow-hidden text-center sm:flex-row sm:text-start"
+            >
               <Link href={`/${actualAlbum.slug}/${firstTrackId}`}>
                 <Image
                   src={"https:" + albumCover?.fields.file.url}
                   alt={actualAlbum.name}
                   width={albumCover?.fields.file.details.image.width}
                   height={albumCover?.fields.file.details.image.height}
-                  className="max-w-full h-auto sm:max-w-[200px] sm:max-h-[150px] object-cover"
+                  className="h-auto max-w-full object-cover sm:max-h-[150px] sm:max-w-[200px]"
                 />
               </Link>
               <CardHeader>

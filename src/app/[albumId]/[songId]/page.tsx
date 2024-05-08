@@ -25,7 +25,7 @@ const Song = async ({ params: { songId, albumId } }: Props) => {
   >({ content_type: "album" });
 
   const album = albumsResponse.items.find(
-    (album) => album.fields.id === albumId
+    (album) => album.fields.id === albumId,
   );
 
   const albumFields = album?.fields as IAlbum;
@@ -37,7 +37,7 @@ const Song = async ({ params: { songId, albumId } }: Props) => {
   >({ content_type: "song" });
 
   const songs = songsResponse.items.filter(
-    (song) => song.fields.albumId === albumId
+    (song) => song.fields.albumId === albumId,
   );
 
   // Artist
@@ -47,7 +47,7 @@ const Song = async ({ params: { songId, albumId } }: Props) => {
   >({ content_type: "artist" });
 
   const artist = artistResponse.items.find(
-    (artist) => artist.fields.id === songs[0].fields.artistId
+    (artist) => artist.fields.id === songs[0].fields.artistId,
   );
 
   const artistFields = artist?.fields as IArtist;

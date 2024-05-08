@@ -35,12 +35,13 @@ const PlaylistTab = ({ songs }: Props) => {
             <React.Fragment key={song.sys.id}>
               <li
                 className={cn(
-                  `p-1 my-1 flex gap-1 items-center justify-start border border-transparent hover:border hover:border-secondary-foreground hover:rounded-sm ${
+                  `my-1 flex items-center justify-start gap-1 border border-transparent p-1 hover:rounded-sm hover:border hover:border-secondary-foreground ${
                     pathname === `/${albumId}/${songFileds.id}`
-                      ? "border-primary rounded-sm"
+                      ? "rounded-sm border-primary"
                       : ""
-                  }`
-                )}>
+                  }`,
+                )}
+              >
                 <span className="min-w-8">
                   {song.fields.trackNo < 10
                     ? `0${song.fields.trackNo}`
@@ -49,7 +50,8 @@ const PlaylistTab = ({ songs }: Props) => {
                 </span>{" "}
                 <Link
                   href={`/${albumId}/${songFileds.id}`}
-                  className="grow flex items-center gap-4 justify-between">
+                  className="flex grow items-center justify-between gap-4"
+                >
                   {songFileds.name}
                   <span>{song.fields.duration}</span>
                 </Link>

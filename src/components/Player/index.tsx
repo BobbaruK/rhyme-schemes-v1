@@ -44,7 +44,7 @@ const Player = ({ album, artists, band, artwork, songs }: Props) => {
 
   return (
     <>
-      <div className="bg-secondary text-secondary-foreground p-2 sm:p-4  flex flex-col gap-4">
+      <div className="flex flex-col gap-4 bg-secondary  p-2 text-secondary-foreground sm:p-4">
         <audio
           ref={audioPlayer}
           // controls
@@ -52,9 +52,9 @@ const Player = ({ album, artists, band, artwork, songs }: Props) => {
           preload="metadata"
         />
         <div>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="order-2 sm:order-1 grow flex flex-col gap-2">
-              <div className="flex justify-between items-center gap-4">
+          <div className="flex flex-col gap-4 sm:flex-row">
+            <div className="order-2 flex grow flex-col gap-2 sm:order-1">
+              <div className="flex items-center justify-between gap-4">
                 <h1 className="">
                   {band.name} - {actualSong?.fields.name}
                 </h1>
@@ -68,12 +68,13 @@ const Player = ({ album, artists, band, artwork, songs }: Props) => {
                   {album.name} <small>({album.year})</small>
                 </Link>
               </h2>
-              <div className="flex my-auto">
+              <div className="my-auto flex">
                 <Button
                   variant={"default"}
                   onClick={togglePlayPause}
                   disabled={!songId}
-                  className="rounded-full w-12 h-12 text-lg">
+                  className="h-12 w-12 rounded-full text-lg"
+                >
                   {isPlaying ? <FaPause /> : <FaPlay />}
                 </Button>
               </div>
@@ -83,7 +84,8 @@ const Player = ({ album, artists, band, artwork, songs }: Props) => {
               alt={artwork ? artwork?.fields.description : ""}
               width={artwork?.fields.file.details.image.width}
               height={artwork?.fields.file.details.image.height}
-              className="max-w-full h-auto sm:max-w-[200px] sm:max-h-[150px] object-cover order-1 sm:order-2"
+              className="order-1 h-auto max-w-full object-cover sm:order-2 sm:max-h-[150px] sm:max-w-[200px]"
+              priority
             />
           </div>
 
@@ -100,7 +102,8 @@ const Player = ({ album, artists, band, artwork, songs }: Props) => {
         </div>
         <Tabs
           defaultValue="playlist"
-          className="w-full grow h-full overflow-y-auto">
+          className="h-full w-full grow overflow-y-auto"
+        >
           <TabsList>
             <TabsTrigger value="playlist">Playlist</TabsTrigger>
             <TabsTrigger value="detalii">Detalii</TabsTrigger>
