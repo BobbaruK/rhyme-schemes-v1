@@ -130,6 +130,11 @@ const Player = ({ album, artists, band, artwork, songs }: Props) => {
               width={artwork?.fields.file.details.image.width}
               height={artwork?.fields.file.details.image.height}
               className="order-1 h-auto max-w-full object-cover sm:order-2 sm:max-h-[150px] sm:max-w-[200px]"
+              sizes={`
+                (max-width: 375px) 310px,
+                (max-width: 639px) 574px,
+                200px
+              `}
               priority
             />
           </div>

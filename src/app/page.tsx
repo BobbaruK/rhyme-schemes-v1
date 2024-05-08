@@ -58,6 +58,11 @@ export default async function Home() {
                   width={albumCover?.fields.file.details.image.width}
                   height={albumCover?.fields.file.details.image.height}
                   className="h-auto max-w-full object-cover sm:max-h-[150px] sm:max-w-[200px]"
+                  sizes={`
+                    (max-width: 375px) 310px,
+                    (max-width: 639px) 574px,
+                    200px
+                  `}
                 />
               </Link>
               <CardHeader>
