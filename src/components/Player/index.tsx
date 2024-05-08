@@ -9,8 +9,9 @@ import { ISong } from "@/types/Song";
 import { Entry, EntrySkeletonType } from "contentful";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { FaPause, FaPlay } from "react-icons/fa";
+import { TbPlayerTrackNext, TbPlayerTrackPrev } from "react-icons/tb";
 import { Button } from "../ui/button";
 import DetailsTab from "./DetailsTab";
 import PlaylistTab from "./PlaylistTab";
@@ -24,10 +25,34 @@ interface Props {
 }
 
 const Player = ({ album, artists, band, artwork, songs }: Props) => {
+  const router = useRouter();
+
   const { albumId, songId } = useParams<{
     albumId: string;
     songId: string;
   }>();
+
+  const actualSong = songs.find((song) => song.fields.id === songId);
+  const actualSongTrackNo = actualSong?.fields.trackNo as unknown as number;
+
+  const getNextSongLink = (action?: "next" | "prev") => {
+    const nextSong = songs.find((song) => {
+      const songNo = song.fields.trackNo as unknown as number;
+
+      if (action === "prev") return songNo === actualSongTrackNo - 1;
+
+      return songNo === actualSongTrackNo + 1;
+    });
+
+    if (!nextSong) return undefined;
+
+    const nextAlbumId = nextSong.fields.albumId as unknown as string;
+    const nextSongId = nextSong.fields.id as unknown as string;
+
+    return `/${nextAlbumId}/${nextSongId}`;
+  };
+  const nextSong = getNextSongLink();
+  const prevSong = getNextSongLink("prev");
 
   const {
     audioPlayer,
@@ -38,9 +63,11 @@ const Player = ({ album, artists, band, artwork, songs }: Props) => {
     isPlaying,
     progressBar,
     togglePlayPause,
-  } = useAudio();
+  } = useAudio({
+    whenFinishedTo: getNextSongLink(),
+  });
 
-  const actualSong = songs.find((song) => song.fields.id === songId);
+  // console.log(getNextSongLink("prev"), actualSongTrackNo, getNextSongLink());
 
   return (
     <>
@@ -68,7 +95,16 @@ const Player = ({ album, artists, band, artwork, songs }: Props) => {
                   {album.name} <small>({album.year})</small>
                 </Link>
               </h2>
-              <div className="my-auto flex">
+              <div className="my-auto flex items-center gap-2">
+                <Button
+                  variant={"default"}
+                  onClick={() => router.push(prevSong ? prevSong : "")}
+                  disabled={!prevSong}
+                  className="h-10 w-10 rounded-full p-1"
+                >
+                  <TbPlayerTrackPrev size={15} />
+                </Button>
+
                 <Button
                   variant={"default"}
                   onClick={togglePlayPause}
@@ -76,6 +112,15 @@ const Player = ({ album, artists, band, artwork, songs }: Props) => {
                   className="h-12 w-12 rounded-full text-lg"
                 >
                   {isPlaying ? <FaPause /> : <FaPlay />}
+                </Button>
+
+                <Button
+                  variant={"default"}
+                  onClick={() => router.push(nextSong ? nextSong : "")}
+                  disabled={!nextSong}
+                  className="h-10 w-10 rounded-full p-1"
+                >
+                  <TbPlayerTrackNext size={15} />
                 </Button>
               </div>
             </div>
@@ -92,7 +137,7 @@ const Player = ({ album, artists, band, artwork, songs }: Props) => {
           <input
             ref={progressBar}
             type="range"
-            name={actualSong?.sys.id}
+            name={actualSong?.fields.name}
             id={actualSong?.sys.id}
             value={currentTime}
             onChange={changeProgress}

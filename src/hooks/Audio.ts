@@ -1,7 +1,11 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-const useAudio = () => {
+interface Settings {
+  whenFinishedTo?: string;
+}
+
+const useAudio = (settings?: Settings) => {
   const searchParams = useSearchParams();
   const timeJump = searchParams.get("time");
 
@@ -50,7 +54,7 @@ const useAudio = () => {
     progressBar.current.value = audioPlayer.current
       .currentTime as unknown as string;
 
-    setCurrentTime(progressBar.current.value as unknown as number);
+    setCurrentTime(parseInt(progressBar.current.value as unknown as string));
 
     animationRef.current = requestAnimationFrame(whilePlaying);
   };
@@ -94,7 +98,9 @@ const useAudio = () => {
     audioPlayer.current.currentTime = progressBar.current
       .value as unknown as number;
 
-    setCurrentTime(progressBar.current.value as unknown as number);
+    setCurrentTime(
+      (oldVal) => (oldVal = progressBar.current?.value as unknown as number),
+    );
   };
 
   const timeTravel = (newTime: number) => {
@@ -103,6 +109,17 @@ const useAudio = () => {
     progressBar.current.value = newTime as unknown as string;
     changeProgress();
   };
+
+  useEffect(() => {
+    console.log(currentTime, duration);
+    if (settings && settings.whenFinishedTo) {
+      if (currentTime === duration && duration !== 0) {
+        console.log("done");
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTime]);
 
   return {
     audioPlayer,
