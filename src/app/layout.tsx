@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import { FaCog } from "react-icons/fa";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,17 +18,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <header>
-          <div className="container flex items-center gap-4 py-4">
-            <Link href={"/"}>Home</Link>
-            <Link href={"/settings"}>
-              <FaCog />
-            </Link>
-          </div>
-        </header>
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <header>
+            <div className="container flex items-center gap-12 py-4">
+              <Link href={"/"}>Home</Link>
+              <Link href={"/settings"} className="flex items-center gap-2">
+                Setări
+                <FaCog />
+              </Link>
+            </div>
+          </header>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

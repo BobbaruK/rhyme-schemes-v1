@@ -7,15 +7,22 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const zodSettingsFormSchema = () =>
-  z
-    .object({
-      autoplay: z.boolean(),
-      repeat: z.boolean(),
-    })
-    .partial();
+  z.object({
+    autoplay: z.boolean().optional(),
+    repeat: z.boolean().optional(),
+    mode: z.enum(["light", "dark", "system"], {
+      required_error: "You need to select a notification type.",
+    }),
+    // mode: z.union([
+    //   z.literal("light"),
+    //   z.literal("dark"),
+    //   z.literal("system"),
+    // ]),
+  });
 
 const fs = zodSettingsFormSchema();
 export const defaultSettings: z.infer<typeof fs> = {
   autoplay: false,
   repeat: false,
+  mode: "system",
 };
